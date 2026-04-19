@@ -4,13 +4,13 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  LayoutDashboard, 
+import {
+  LayoutDashboard,
   type LucideIcon,
-  Receipt, 
-  PlusCircle, 
-  Settings as SettingsIcon, 
-  LogOut, 
+  Receipt,
+  PlusCircle,
+  Settings as SettingsIcon,
+  LogOut,
   Wallet,
   TrendingDown,
   Target,
@@ -283,8 +283,8 @@ const useViewport = () => {
 };
 
 const getAuthHeader = () => {
-    const token = localStorage.getItem("token");
-    return token ? { Authorization: `Bearer ${token}` } : {};
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
 const getStoredUser = (): User | null => {
@@ -361,11 +361,11 @@ function LoginPage({ onLogin }: { onLogin: (u: User, token: string) => void }) {
     e.preventDefault();
     setLoading(true); setErr("");
     try {
-        const endpoint = isRegister ? "/auth/register" : "/auth/login";
-        const res = await axios.post(`${API_URL}${endpoint}`, form);
-        onLogin(res.data.user, res.data.token);
+      const endpoint = isRegister ? "/auth/register" : "/auth/login";
+      const res = await axios.post(`${API_URL}${endpoint}`, form);
+      onLogin(res.data.user, res.data.token);
     } catch (error: unknown) {
-        setErr(getErrorMessage(error, "Auth failed."));
+      setErr(getErrorMessage(error, "Auth failed."));
     } finally { setLoading(false); }
   };
 
@@ -583,7 +583,7 @@ function LoginPage({ onLogin }: { onLogin: (u: User, token: string) => void }) {
                 onClick={() => setIsRegister(false)}
                 style={{
                   border: "none",
-                background: isRegister ? "transparent" : THEME.activeBg,
+                  background: isRegister ? "transparent" : THEME.activeBg,
                   color: isRegister ? THEME.textDim : THEME.activeText,
                   borderRadius: "999px",
                   padding: "10px 16px",
@@ -764,21 +764,21 @@ function DashboardView({ expenses, stats, user, trips, onLogout }: { expenses: E
           <div style={{ color: THEME.textDim, fontSize: "14px" }}>{user.email}</div>
         </div>
 
-        <motion.button 
-          onClick={onLogout} 
-          whileHover={{ y: -4 }} 
-          whileTap={{ scale: 0.98 }} 
-          style={{ 
+        <motion.button
+          onClick={onLogout}
+          whileHover={{ y: -4 }}
+          whileTap={{ scale: 0.98 }}
+          style={{
             ...glassStyle,
-            width: "100%", 
-            padding: "28px", 
-            background: "rgba(255,255,255,0.03)", 
-            color: THEME.textMain, 
-            fontWeight: 800, 
-            cursor: "pointer", 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
+            width: "100%",
+            padding: "28px",
+            background: "rgba(255,255,255,0.03)",
+            color: THEME.textMain,
+            fontWeight: 800,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             gap: "14px",
             fontSize: "20px"
           }}
@@ -1124,6 +1124,7 @@ function SettingsView({
   saving: boolean;
   feedback: string;
 }) {
+  const { isMobile } = useViewport();
   const [budget, setBudget] = useState(String(user.monthlyBudget));
   const [currency, setCurrency] = useState<Currency>(user.currency);
   const [themePreference, setThemePreference] = useState<ThemePreference>(user.themePreference);
@@ -1290,21 +1291,21 @@ export default function App() {
 
     const loadData = async () => {
       try {
-          const data = await fetchExpenseData();
+        const data = await fetchExpenseData();
 
-          if (!isMounted) {
-            return;
-          }
+        if (!isMounted) {
+          return;
+        }
 
-          setExpenses(data.expenses);
-          setStats(data.stats);
-          setTrips(data.trips);
+        setExpenses(data.expenses);
+        setStats(data.stats);
+        setTrips(data.trips);
       } catch (error) {
-          console.error(getErrorMessage(error, "Unable to load expense data."));
+        console.error(getErrorMessage(error, "Unable to load expense data."));
       } finally {
-          if (isMounted) {
-            setLoading(false);
-          }
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -1560,13 +1561,13 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100vh", background: `linear-gradient(180deg, ${THEME.bg}, ${THEME.bgSoft} 45%, ${THEME.bg})`, display: "flex", flexDirection: isMobile || isTablet ? "column" : "row" }}>
-      <aside style={{ 
-        width: isMobile || isTablet ? "100%" : "280px", 
-        background: THEME.bg, 
-        borderRight: isMobile || isTablet ? "none" : `1px solid ${THEME.border}`, 
-        borderBottom: isMobile || isTablet ? `1px solid ${THEME.border}` : "none", 
-        display: "flex", 
-        flexDirection: "column", 
+      <aside style={{
+        width: isMobile || isTablet ? "100%" : "280px",
+        background: THEME.bg,
+        borderRight: isMobile || isTablet ? "none" : `1px solid ${THEME.border}`,
+        borderBottom: isMobile || isTablet ? `1px solid ${THEME.border}` : "none",
+        display: "flex",
+        flexDirection: "column",
         padding: isMobile ? "24px 0" : "32px 0",
         position: isMobile ? "fixed" : "relative",
         top: 0,
@@ -1601,7 +1602,7 @@ export default function App() {
             { id: "trips", icon: Wallet, label: "Trips" },
             { id: "settings", icon: SettingsIcon, label: "Budget Settings" },
           ].map(item => (
-            <motion.div key={item.id} onClick={() => { setView(item.id as View); if (isMobile) setMenuOpen(false); }} whileHover={{ x: 6 }} style={{ 
+            <motion.div key={item.id} onClick={() => { setView(item.id as View); if (isMobile) setMenuOpen(false); }} whileHover={{ x: 6 }} style={{
               margin: "0 18px 10px",
               padding: "16px 18px", display: "flex", alignItems: "center", gap: "16px", cursor: "pointer",
               color: view === item.id ? THEME.activeText : THEME.textDim,
@@ -1615,7 +1616,7 @@ export default function App() {
           ))}
         </nav>
         <div style={{ padding: "0 28px" }}>
-            <p style={{ color: THEME.textMuted, fontSize: "11px", textAlign: "center" }}>v1.0.4 • {currentUser.email}</p>
+          <p style={{ color: THEME.textMuted, fontSize: "11px", textAlign: "center" }}>v1.0.4 • {currentUser.email}</p>
         </div>
       </aside>
 
@@ -1624,7 +1625,7 @@ export default function App() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: isMobile ? "24px" : "0", gap: "20px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               {isMobile && (
-                 <button onClick={() => setMenuOpen(true)} style={{ background: "transparent", border: "none", color: THEME.textMain, cursor: "pointer", padding: "8px", background: THEME.surface, borderRadius: "12px", border: `1px solid ${THEME.border}` }}>
+                 <button onClick={() => setMenuOpen(true)} style={{ color: THEME.textMain, cursor: "pointer", padding: "8px", background: THEME.surface, borderRadius: "12px", border: `1px solid ${THEME.border}` }}>
                    <Menu size={24} />
                  </button>
               )}
@@ -1642,22 +1643,22 @@ export default function App() {
                   <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search expenses..." style={{ background: "transparent", border: "none", color: THEME.textMain, outline: "none", fontSize: "14px", width: "100%" }} />
                 </div>
               )}
-              
+
               <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                   <div style={{ width: isMobile ? "44px" : "50px", height: isMobile ? "44px" : "50px", borderRadius: "15px", background: THEME.surface, border: `1px solid ${THEME.border}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}><Bell size={isMobile ? 18 : 20} color={THEME.textMain} /></div>
-                   <motion.div 
-                      whileHover={{ scale: 1.06 }} 
-                      style={{ 
-                          width: isMobile ? "44px" : "50px", height: isMobile ? "44px" : "50px", borderRadius: "50%", 
-                          background: THEME.buttonBg, 
-                          border: `1px solid ${THEME.borderStrong}`, cursor: "pointer",
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          fontWeight: 900, fontSize: isMobile ? "16px" : "18px", color: THEME.buttonText,
-                          boxShadow: "0 10px 20px rgba(0,0,0,0.3)"
-                      }}
-                   >
-                      {currentUser.name[0]}
-                   </motion.div>
+                <div style={{ width: isMobile ? "44px" : "50px", height: isMobile ? "44px" : "50px", borderRadius: "15px", background: THEME.surface, border: `1px solid ${THEME.border}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}><Bell size={isMobile ? 18 : 20} color={THEME.textMain} /></div>
+                <motion.div
+                  whileHover={{ scale: 1.06 }}
+                  style={{
+                    width: isMobile ? "44px" : "50px", height: isMobile ? "44px" : "50px", borderRadius: "50%",
+                    background: THEME.buttonBg,
+                    border: `1px solid ${THEME.borderStrong}`, cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontWeight: 900, fontSize: isMobile ? "16px" : "18px", color: THEME.buttonText,
+                    boxShadow: "0 10px 20px rgba(0,0,0,0.3)"
+                  }}
+                >
+                  {currentUser.name[0]}
+                </motion.div>
               </div>
             </div>
           </div>
@@ -1694,29 +1695,29 @@ export default function App() {
           />
         )}
         {view === "expenses" && (
-            <div style={{ ...glassStyle, padding: isMobile ? "24px 20px" : "32px", background: "rgba(255,255,255,0.03)" }}>
-                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
-                    <div>
-                      <h3 style={{ fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>Complete History</h3>
-                      <p style={{ color: THEME.textDim, margin: 0 }}>{filteredExpenses.length} matching expenses</p>
-                    </div>
-                    <motion.button onClick={exportExpensesPdf} whileHover={{ scale: 1.05 }} style={{ background: THEME.buttonBg, border: "none", padding: "10px 20px", borderRadius: "12px", color: THEME.buttonText, fontWeight: 700, display: "flex", alignItems: "center", gap: "10px" }}>
-                        <FileDown size={18} /> Export PDF
-                    </motion.button>
-                 </div>
-                 {filteredExpenses.map(exp => (
-                    <div key={exp._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px 0", borderBottom: `1px solid ${THEME.border}` }}>
-                        <div style={{ display: "flex", gap: "20px" }}>
-                             <div style={{ fontSize: "24px", width: "44px", height: "44px", borderRadius: "14px", border: `1px solid ${THEME.border}`, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>{CATEGORY_ICONS[exp.category]}</div>
-                             <div>
-                                <div style={{ fontWeight: 800, fontSize: "16px" }}>{exp.title}</div>
-                                <div style={{ color: THEME.textDim, fontSize: "13px" }}>{exp.category} • {new Date(exp.date).toLocaleDateString()} {exp.note ? `• ${exp.note}` : ""}</div>
-                             </div>
-                        </div>
-                        <div style={{ fontWeight: 900, color: THEME.textMain, fontSize: "20px" }}>-{formatCurrency(currentUser.currency, exp.amount)}</div>
-                    </div>
-                 ))}
+          <div style={{ ...glassStyle, padding: isMobile ? "24px 20px" : "32px", background: "rgba(255,255,255,0.03)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
+              <div>
+                <h3 style={{ fontSize: "18px", fontWeight: 800, marginBottom: "8px" }}>Complete History</h3>
+                <p style={{ color: THEME.textDim, margin: 0 }}>{filteredExpenses.length} matching expenses</p>
+              </div>
+              <motion.button onClick={exportExpensesPdf} whileHover={{ scale: 1.05 }} style={{ background: THEME.buttonBg, border: "none", padding: "10px 20px", borderRadius: "12px", color: THEME.buttonText, fontWeight: 700, display: "flex", alignItems: "center", gap: "10px" }}>
+                <FileDown size={18} /> Export PDF
+              </motion.button>
             </div>
+            {filteredExpenses.map(exp => (
+              <div key={exp._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px 0", borderBottom: `1px solid ${THEME.border}` }}>
+                <div style={{ display: "flex", gap: "20px" }}>
+                  <div style={{ fontSize: "24px", width: "44px", height: "44px", borderRadius: "14px", border: `1px solid ${THEME.border}`, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>{CATEGORY_ICONS[exp.category]}</div>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: "16px" }}>{exp.title}</div>
+                    <div style={{ color: THEME.textDim, fontSize: "13px" }}>{exp.category} • {new Date(exp.date).toLocaleDateString()} {exp.note ? `• ${exp.note}` : ""}</div>
+                  </div>
+                </div>
+                <div style={{ fontWeight: 900, color: THEME.textMain, fontSize: "20px" }}>-{formatCurrency(currentUser.currency, exp.amount)}</div>
+              </div>
+            ))}
+          </div>
         )}
         {view === "settings" && (
           <SettingsView
