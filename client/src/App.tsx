@@ -694,7 +694,7 @@ function StatCard({ icon: Icon, label, value, trend, color }: { icon: LucideIcon
 }
 
 // ─── Dashboard View ──────────────────────────────────────────────
-function DashboardView({ expenses, stats, user, trips }: { expenses: Expense[]; stats: Stats; user: User; trips: Trip[] }) {
+function DashboardView({ expenses, stats, user, trips, onLogout }: { expenses: Expense[]; stats: Stats; user: User; trips: Trip[]; onLogout: () => void }) {
   const { isMobile } = useViewport();
   const pieData = stats.categoryBreakdown.map(c => ({ name: c._id, value: c.total, color: CATEGORY_COLORS[c._id as Category] || "#6B7280" }));
   const barData = stats.dailySpending.map(d => ({ day: `${d._id}`, amount: d.total }));
@@ -754,6 +754,34 @@ function DashboardView({ expenses, stats, user, trips }: { expenses: Expense[]; 
             <div style={{ fontWeight: 900, color: THEME.textMain, fontSize: "18px" }}>-{formatCurrency(user.currency, exp.amount)}</div>
           </div>
         ))}
+      <div style={{ marginTop: "40px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
+        <div style={{ ...glassStyle, padding: "28px", background: "rgba(255,255,255,0.03)" }}>
+          <div style={{ color: THEME.textMuted, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: "8px" }}>Current Budget</div>
+          <div style={{ fontSize: "32px", fontWeight: 900, marginBottom: "8px" }}>{formatCurrency(user.currency, user.monthlyBudget)}</div>
+          <div style={{ color: THEME.textDim, fontSize: "14px" }}>{user.email}</div>
+        </div>
+
+        <motion.button 
+          onClick={onLogout} 
+          whileHover={{ y: -4 }} 
+          whileTap={{ scale: 0.98 }} 
+          style={{ 
+            ...glassStyle,
+            width: "100%", 
+            padding: "28px", 
+            background: "rgba(255,255,255,0.03)", 
+            color: THEME.textMain, 
+            fontWeight: 800, 
+            cursor: "pointer", 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center", 
+            gap: "14px",
+            fontSize: "20px"
+          }}
+        >
+          <LogOut size={24} /> Sign Out Account
+        </motion.button>
       </div>
     </motion.div>
   );
@@ -1559,17 +1587,11 @@ export default function App() {
             </motion.div>
           ))}
         </nav>
-
-        <div style={{ padding: isMobile ? "18px" : "0 28px" }}>
-          <div style={{ ...glassStyle, padding: "18px", marginBottom: "18px", background: "rgba(255,255,255,0.03)" }}>
-            <div style={{ color: THEME.textMuted, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: "8px" }}>Current Budget</div>
-            <div style={{ fontSize: "24px", fontWeight: 900 }}>{formatCurrency(currentUser.currency, currentUser.monthlyBudget)}</div>
-            <div style={{ color: THEME.textDim, marginTop: "6px", fontSize: "13px" }}>{currentUser.email}</div>
+        {!isMobile && (
+          <div style={{ padding: "0 28px" }}>
+            <p style={{ color: THEME.textMuted, fontSize: "11px", textAlign: "center" }}>v1.0.4 • {currentUser.email}</p>
           </div>
-          <motion.button onClick={logout} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} style={{ width: "100%", padding: "16px", borderRadius: "16px", background: "transparent", border: `1px solid ${THEME.border}`, color: THEME.textMain, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-            <LogOut size={18} /> Sign Out
-          </motion.button>
-        </div>
+        )}
       </aside>
 
       <main style={{ flex: 1, minWidth: "0", padding: isMobile ? "24px 16px 40px" : isTablet ? "32px 24px 44px" : "44px clamp(20px, 4vw, 56px)", overflowY: "auto" }}>
@@ -1617,7 +1639,7 @@ export default function App() {
           {isMobile && <p style={{ color: THEME.textDim, margin: "16px 0 0", fontSize: "14px" }}>{pageDescription}</p>}
         </header>
 
-        {view === "dashboard" && <DashboardView expenses={expenses} stats={stats} user={currentUser} trips={trips} />}
+        {view === "dashboard" && <DashboardView expenses={expenses} stats={stats} user={currentUser} trips={trips} onLogout={logout} />}
         {view === "add" && (
           <AddExpenseView
             form={expenseForm}
