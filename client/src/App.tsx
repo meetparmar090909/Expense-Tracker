@@ -18,6 +18,8 @@ import {
   FileDown,
   Bell,
   Search,
+  Menu,
+  X,
 } from "lucide-react";
 
 // ─── Configuration ────────────────────────────────────────────────
@@ -1220,6 +1222,7 @@ export default function App() {
   const { isMobile, isTablet } = useViewport();
   const [user, setUser] = useState<User | null>(() => getStoredUser());
   const [view, setView] = useState<View>("dashboard");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [stats, setStats] = useState<Stats>({ categoryBreakdown: [], dailySpending: [], totalSpent: 0 });
@@ -1557,17 +1560,40 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100vh", background: `linear-gradient(180deg, ${THEME.bg}, ${THEME.bgSoft} 45%, ${THEME.bg})`, display: "flex", flexDirection: isMobile || isTablet ? "column" : "row" }}>
-      <aside style={{ width: isMobile || isTablet ? "100%" : "280px", background: "rgba(255,255,255,0.02)", borderRight: isMobile || isTablet ? "none" : `1px solid ${THEME.border}`, borderBottom: isMobile || isTablet ? `1px solid ${THEME.border}` : "none", display: "flex", flexDirection: "column", padding: isMobile ? "24px 0" : "32px 0" }}>
-        <div style={{ padding: "0 28px 44px", display: "flex", alignItems: "center", gap: "14px" }}>
-          <div style={{ width: "48px", height: "48px", borderRadius: "16px", background: THEME.surfaceStrong, border: `1px solid ${THEME.borderStrong}`, display: "flex", alignItems: "center", justifyContent: "center" }}><Wallet color={THEME.textMain} size={24} /></div>
-          <div>
-            <div style={{ fontSize: "12px", color: THEME.textMuted, letterSpacing: "0.2em", textTransform: "uppercase" }}>Expense Tracker</div>
-            <span style={{ fontSize: "22px", fontWeight: 900, letterSpacing: "-1px" }}>SpendWise</span>
-            <div style={{ color: THEME.textDim, fontSize: "13px", marginTop: "4px", fontWeight: 600 }}>{formatCurrency(currentUser.currency, currentUser.monthlyBudget)} Budget</div>
+      <aside style={{ 
+        width: isMobile || isTablet ? "100%" : "280px", 
+        background: THEME.bg, 
+        borderRight: isMobile || isTablet ? "none" : `1px solid ${THEME.border}`, 
+        borderBottom: isMobile || isTablet ? `1px solid ${THEME.border}` : "none", 
+        display: "flex", 
+        flexDirection: "column", 
+        padding: isMobile ? "24px 0" : "32px 0",
+        position: isMobile ? "fixed" : "relative",
+        top: 0,
+        left: 0,
+        height: isMobile ? "100vh" : "auto",
+        zIndex: 1000,
+        transform: isMobile && !menuOpen ? "translateX(-100%)" : "translateX(0)",
+        transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        boxShadow: isMobile && menuOpen ? "20px 0 80px rgba(0,0,0,0.8)" : "none",
+      }}>
+        <div style={{ padding: "0 28px 44px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div style={{ width: "48px", height: "48px", borderRadius: "16px", background: THEME.surfaceStrong, border: `1px solid ${THEME.borderStrong}`, display: "flex", alignItems: "center", justifyContent: "center" }}><Wallet color={THEME.textMain} size={24} /></div>
+            <div>
+              <div style={{ fontSize: "12px", color: THEME.textMuted, letterSpacing: "0.2em", textTransform: "uppercase" }}>Expense Tracker</div>
+              <span style={{ fontSize: "22px", fontWeight: 900, letterSpacing: "-1px" }}>SpendWise</span>
+              <div style={{ color: THEME.textDim, fontSize: "13px", marginTop: "4px", fontWeight: 600 }}>{formatCurrency(currentUser.currency, currentUser.monthlyBudget)} Budget</div>
+            </div>
           </div>
+          {isMobile && (
+            <button onClick={() => setMenuOpen(false)} style={{ background: "transparent", border: "none", color: THEME.textMain, cursor: "pointer" }}>
+              <X size={28} />
+            </button>
+          )}
         </div>
 
-        <nav style={{ flex: 1, display: isMobile ? "grid" : "block", gridTemplateColumns: isMobile ? "repeat(2, minmax(0, 1fr))" : undefined, gap: isMobile ? "8px" : undefined, padding: isMobile ? "0 18px" : undefined }}>
+        <nav style={{ flex: 1, padding: isMobile ? "0 18px" : undefined }}>
           {[
             { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
             { id: "expenses", icon: Receipt, label: "History" },
@@ -1575,34 +1601,38 @@ export default function App() {
             { id: "trips", icon: Wallet, label: "Trips" },
             { id: "settings", icon: SettingsIcon, label: "Budget Settings" },
           ].map(item => (
-            <motion.div key={item.id} onClick={() => setView(item.id as View)} whileHover={{ x: 6 }} style={{ 
-              margin: isMobile ? "0" : "0 18px 10px",
+            <motion.div key={item.id} onClick={() => { setView(item.id as View); if (isMobile) setMenuOpen(false); }} whileHover={{ x: 6 }} style={{ 
+              margin: "0 18px 10px",
               padding: "16px 18px", display: "flex", alignItems: "center", gap: "16px", cursor: "pointer",
               color: view === item.id ? THEME.activeText : THEME.textDim,
               background: view === item.id ? THEME.activeBg : "transparent",
               borderRadius: "18px",
               border: view === item.id ? `1px solid ${THEME.borderStrong}` : "1px solid transparent",
-              minHeight: isMobile ? "64px" : undefined,
             }}>
               <item.icon size={22} />
-              <span style={{ fontWeight: 700, fontSize: isMobile ? "13px" : "15px" }}>{item.label}</span>
+              <span style={{ fontWeight: 700, fontSize: "15px" }}>{item.label}</span>
             </motion.div>
           ))}
         </nav>
-        {!isMobile && (
-          <div style={{ padding: "0 28px" }}>
+        <div style={{ padding: "0 28px" }}>
             <p style={{ color: THEME.textMuted, fontSize: "11px", textAlign: "center" }}>v1.0.4 • {currentUser.email}</p>
-          </div>
-        )}
+        </div>
       </aside>
 
       <main style={{ flex: 1, minWidth: "0", padding: isMobile ? "24px 16px 40px" : isTablet ? "32px 24px 44px" : "44px clamp(20px, 4vw, 56px)", overflowY: "auto" }}>
         <header style={{ marginBottom: "42px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: isMobile ? "24px" : "0", gap: "20px" }}>
-            <div>
-              <div style={{ color: THEME.textMuted, fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "8px" }}>Workspace</div>
-              <h2 style={{ fontSize: isMobile ? "28px" : "36px", fontWeight: 900, marginBottom: "8px", marginTop: 0 }}>{pageTitle}</h2>
-              {!isMobile && <p style={{ color: THEME.textDim, margin: 0 }}>{pageDescription}</p>}
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              {isMobile && (
+                 <button onClick={() => setMenuOpen(true)} style={{ background: "transparent", border: "none", color: THEME.textMain, cursor: "pointer", padding: "8px", background: THEME.surface, borderRadius: "12px", border: `1px solid ${THEME.border}` }}>
+                   <Menu size={24} />
+                 </button>
+              )}
+              <div>
+                <div style={{ color: THEME.textMuted, fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "8px" }}>Workspace</div>
+                <h2 style={{ fontSize: isMobile ? "28px" : "36px", fontWeight: 900, marginBottom: "8px", marginTop: 0 }}>{pageTitle}</h2>
+                {!isMobile && <p style={{ color: THEME.textDim, margin: 0 }}>{pageDescription}</p>}
+              </div>
             </div>
 
             <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
