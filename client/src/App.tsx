@@ -1563,6 +1563,7 @@ export default function App() {
           <div>
             <div style={{ fontSize: "12px", color: THEME.textMuted, letterSpacing: "0.2em", textTransform: "uppercase" }}>Expense Tracker</div>
             <span style={{ fontSize: "22px", fontWeight: 900, letterSpacing: "-1px" }}>SpendWise</span>
+            <div style={{ color: THEME.textDim, fontSize: "13px", marginTop: "4px", fontWeight: 600 }}>{formatCurrency(currentUser.currency, currentUser.monthlyBudget)} Budget</div>
           </div>
         </div>
 
