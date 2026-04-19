@@ -754,6 +754,7 @@ function DashboardView({ expenses, stats, user, trips, onLogout }: { expenses: E
             <div style={{ fontWeight: 900, color: THEME.textMain, fontSize: "18px" }}>-{formatCurrency(user.currency, exp.amount)}</div>
           </div>
         ))}
+      </div>
       <div style={{ marginTop: "40px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
         <div style={{ ...glassStyle, padding: "28px", background: "rgba(255,255,255,0.03)" }}>
           <div style={{ color: THEME.textMuted, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: "8px" }}>Current Budget</div>
